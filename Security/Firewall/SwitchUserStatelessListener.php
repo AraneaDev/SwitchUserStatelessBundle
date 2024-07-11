@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
@@ -27,7 +26,7 @@ use Symfony\Component\Security\Http\SecurityEvents;
  * Unlike @see \Symfony\Component\Security\Http\Firewall\SwitchUserListener it is stateless
  * (no 302 redirection) and default parameter is X-Switch-User in headers.
  */
-class SwitchUserStatelessListener implements ListenerInterface
+class SwitchUserStatelessListener
 {
     /**
      * @var TokenStorageInterface
@@ -108,11 +107,11 @@ class SwitchUserStatelessListener implements ListenerInterface
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      * 
      * @throws AuthenticationException
      */
-    public function handle(GetResponseEvent $event)
+    public function __invoke(RequestEvent $event)
     {
         $request = $event->getRequest();
 
